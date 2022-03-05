@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 
 export const dbConnection = async () => {
 
-    const user = process.env.DB_USER;
-    const password = process.env.DB_PASSWORD;
-    const databaseName = process.env.DB_DATABASE;
+    const user: string | undefined = process.env.DB_USER;
+    const password: string | undefined = process.env.DB_PASSWORD;
+    const databaseName: string | undefined = process.env.DB_DATABASE;
 
     try {
         
