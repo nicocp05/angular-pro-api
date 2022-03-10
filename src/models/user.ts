@@ -27,8 +27,18 @@ const UserSchema: Schema<User> = new Schema({
     google: {
         type: Boolean,
         default: false
+    },
+    status: {
+        type: Boolean,
+        default: true
     }
 
+});
+
+UserSchema.method('toJSON' , function() {
+    const { __v, _id, password, ...object } = this.toObject();
+    object.uid = _id;
+    return object;
 });
 
 export const UserModel = model<User>('User', UserSchema);

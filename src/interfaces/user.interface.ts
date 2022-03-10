@@ -6,5 +6,6 @@ export interface User {
     img?: String;
     role: String;
     google: Boolean;
+    status: Boolean;
 
 }

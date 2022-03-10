@@ -1,5 +1,5 @@
 import express, { Application } from 'express';
-import router from './routes/index.routes';
+import router from './routes';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 
-app.use('/api/user', router);
+app.use('/api', router);
 
 
 app.listen( port, () => {
