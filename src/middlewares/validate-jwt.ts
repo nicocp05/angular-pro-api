@@ -18,7 +18,7 @@ export const validateJWT = (req: Request, res: Response, next: NextFunction) => 
         
         const { uid }: any = jwt.verify( token, secretKey );
 
-        res.setHeader('uid', uid);
+        // res.setHeader('uid', uid);
 
         req.params.uid = uid
         

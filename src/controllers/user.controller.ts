@@ -9,13 +9,22 @@ import { generatedJWT } from '../helper/jwt';
 
 export const getUsers = async ( req: Request, res: Response ) => {
     
-    const users: User[] = await UserModel.find({}, 'name email role google status');
-    
+    const offset: number = Number(req.query.offset) || 0;
+
+    const [ users, total ] = await Promise.all([
+        UserModel
+        .find({}, 'name email role google status')
+        .skip( offset )
+        .limit( 5 ),
+        UserModel.count()
+    ]);
+
 
     res.json({
         ok: true,
         users,
-        uid: req.params.uid
+        uid: req.params.uid,
+        total
     });
 
 }
@@ -25,10 +34,10 @@ export const postUser = async ( req: Request, res: Response ) => {
     const { email, password } = req.body;
 
     
-
     try {
 
-        const emailFounded = await UserModel.findOne({email});
+        const emailFounded: User | any = await UserModel.findOne({email});
+
 
         if(emailFounded) {
             return res.status(400).json({
@@ -39,12 +48,12 @@ export const postUser = async ( req: Request, res: Response ) => {
 
         const user: HydratedDocument<User> = new UserModel( req.body );
     
-        const salt = bcrypt.genSaltSync(10);
+        const salt: string = bcrypt.genSaltSync(10);
         user.password = bcrypt.hashSync(password, salt);
         
         await user.save();
 
-        const token = await generatedJWT( user.id );
+        const token: any = await generatedJWT( user.id );
         
         res.json({
             ok: true,
@@ -56,7 +65,7 @@ export const postUser = async ( req: Request, res: Response ) => {
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Error'
+            msg: 'Server error'
         });
     }
 
@@ -66,13 +75,13 @@ export const postUser = async ( req: Request, res: Response ) => {
 
 export const putUser = async ( req: Request, res: Response ) => {
 
-    const uid = req.params.id;
+    const uid: string = req.params.id;
 
 
 
     try {
 
-        const userFounded = await UserModel.findById({_id: uid});
+        const userFounded: User | any = await UserModel.findById({_id: uid});
 
         if(!userFounded) {
             return res.status(404).json({
@@ -96,7 +105,8 @@ export const putUser = async ( req: Request, res: Response ) => {
 
         fields.email = email;
 
-        const userUpdated = await UserModel.findByIdAndUpdate( uid, fields, { new: true });
+        const userUpdated: User | any = await UserModel
+            .findByIdAndUpdate( uid, fields, { new: true });
 
         res.json({
             ok: true,
@@ -107,7 +117,7 @@ export const putUser = async ( req: Request, res: Response ) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error updating user'
+            msg: 'Server error'
         });
     }
 
@@ -115,11 +125,11 @@ export const putUser = async ( req: Request, res: Response ) => {
 
 export const deleteUser = async ( req: Request, res: Response ) => {
 
-    const uid = req.params.id;
+    const uid: string = req.params.id;
 
     try {
 
-        const userFounded: any = await UserModel.findById({_id: uid});
+        const userFounded: User | any = await UserModel.findById({_id: uid});
 
         if(!userFounded) {
             return res.status(404).json({
@@ -134,10 +144,7 @@ export const deleteUser = async ( req: Request, res: Response ) => {
                 ...userFounded._doc,
                 status: false
             }
-        }
-
-        console.log(userFounded);
-        
+        }        
 
         await UserModel.findByIdAndUpdate( uid, userDeleted, { new: true });
 
@@ -150,7 +157,7 @@ export const deleteUser = async ( req: Request, res: Response ) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error deleting user'
+            msg: 'Server error'
         }); 
     }
 
