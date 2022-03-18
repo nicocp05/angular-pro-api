@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
+import path from 'path';
+import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
+import { updateImage } from "../helper/update-image";
 
 
 export const putUploads = async ( req: Request, res: Response ) => {
@@ -45,7 +48,6 @@ export const putUploads = async ( req: Request, res: Response ) => {
     const nameFile = `${ uuidv4() }.${ extensionFile }`;
 
     const path: string = `./src/uploads/${table}/${nameFile}`;
-    console.log(path);
     
 
     file.mv( path, (err: any) => {
@@ -57,6 +59,8 @@ export const putUploads = async ( req: Request, res: Response ) => {
                 msg: 'Error to load image'
           });
         }
+
+        updateImage( table, id, nameFile );
     
         res.json({
             ok: true,
@@ -65,5 +69,23 @@ export const putUploads = async ( req: Request, res: Response ) => {
         });
     });
 
+
+}
+
+export const getUploads = async ( req: Request, res: Response ) => {
+
+    const table: string = req.params.table;
+    const img: string = req.params.img;
+
+    const pathImg: string = path.join( __dirname, `../../src/uploads/${table}/${img}`);
+
+    if( fs.existsSync( pathImg ) ){
+        res.sendFile( pathImg )
+    } else {
+        const pathImg: string = path.join( __dirname, `../../src/uploads/no-image.jpg`);
+        
+
+        res.sendFile( pathImg );
+    }
 
 }

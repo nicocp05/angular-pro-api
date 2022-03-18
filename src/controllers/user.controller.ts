@@ -13,10 +13,10 @@ export const getUsers = async ( req: Request, res: Response ) => {
 
     const [ users, total ] = await Promise.all([
         UserModel
-        .find({}, 'name email role google status')
+        .find({}, 'name email role google status img')
         .skip( offset )
         .limit( 5 ),
-        UserModel.count()
+        UserModel.countDocuments()
     ]);
 
 
