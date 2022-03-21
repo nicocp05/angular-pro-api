@@ -7,5 +7,6 @@ export interface Doctor {
     img: string;
     user: User;
     hospital: Hospital;
+    status: boolean;
 
 }

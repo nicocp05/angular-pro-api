@@ -5,5 +5,6 @@ export interface Hospital {
     name: string;
     img: string;
     user: User;
+    status: boolean;
 
 }

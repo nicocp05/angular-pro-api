@@ -14,6 +14,10 @@ const HospitalSchema: Schema<Hospital> = new Schema({
         required: true,
         type: Schema.Types.ObjectId,
         ref: 'User'
+    },
+    status: {
+        type: Boolean,
+        default: true
     }
 
 });

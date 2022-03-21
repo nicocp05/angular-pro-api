@@ -17,10 +17,18 @@ router.post('/', [
 ], postHospital);
 
 router.put('/:id', [
+
+    validateJWT,
+    check('name', 'Name is required').not().isEmpty(),
+    validateFields
     
 ], putHospital);
 
-router.put('/delete/:id', deleteHospital);
+router.put('/delete/:id', [
+
+    validateJWT,
+
+], deleteHospital);
 
 
 

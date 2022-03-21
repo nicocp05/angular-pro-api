@@ -60,14 +60,75 @@ export const postHospital = async ( req: Request, res: Response ) => {
 
 }
 
-export const putHospital = ( req: Request, res: Response ) => {
+export const putHospital = async ( req: Request, res: Response ) => {
+
+    try {
+
+        const id: string = req.params.id;
+        const uid: string = req.params.uid;
+
+        const hospital = await HospitalModel.findById(id);
+
+        if(!hospital) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Hospital not founded'
+            });
+        }
+
+        const changesHospital = {
+            ...req.body,
+            user: uid
+        }
+
+        const hospitalUpdated = await HospitalModel.findByIdAndUpdate( id, changesHospital, { new: true } );
 
 
+        res.json({
+            ok: true,
+            msg: 'Hospital updated',
+            hospitalUpdated
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Server error'
+        }); 
+    }
 
 }
 
-export const deleteHospital = ( req: Request, res: Response ) => {
+export const deleteHospital = async ( req: Request, res: Response ) => {
 
+    try {
 
+        const id: string = req.params.id;
+    
+        const hospital = await HospitalModel.findById(id);
+    
+        if(!hospital) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Hospital not founded'
+            });
+        }
+    
+        const hospitalDeleted = await HospitalModel.findByIdAndUpdate( id, { status: false });
+
+        res.json({
+            ok: true,
+            msg: 'Hospital deleted',
+            hospitalDeleted
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Server error'
+        });  
+    }
 
 }

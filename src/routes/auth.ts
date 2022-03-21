@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { googleSignIn, postAuth } from '../controllers/auth.controller';
+import { googleSignIn, postAuth, renewToken } from '../controllers/auth.controller';
 import { validateFields } from '../middlewares/validate-fields';
+import { validateJWT } from '../middlewares/validate-jwt';
 
 const router: Router = Router();
 
@@ -16,6 +17,9 @@ router.post('/google', [
     validateFields
 ], googleSignIn);
 
+router.get('/renew', [
+    validateJWT
+], renewToken);
 
 
 

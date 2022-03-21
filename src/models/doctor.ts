@@ -19,6 +19,10 @@ const DoctorSchema: Schema<Doctor> = new Schema({
         required: true,
         type: Schema.Types.ObjectId,
         ref: 'Hospital'
+    },
+    status: {
+        type: Boolean,
+        default: true
     }
 
 });

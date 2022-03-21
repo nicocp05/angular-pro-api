@@ -19,9 +19,15 @@ router.post('/', [
 
 router.put('/:id', [
     
+    validateJWT,
+    check('name', 'Name is required').not().isEmpty(),
+    validateFields
+
 ], putDoctor);
 
-router.put('/delete/:id', deleteDoctor);
+router.put('/delete/:id', [
+    validateJWT
+], deleteDoctor);
 
 
 

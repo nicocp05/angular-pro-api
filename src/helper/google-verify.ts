@@ -12,7 +12,6 @@ export const googleVerify = async ( token: any ) => {
       //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
     });
     const payload: TokenPayload | any = ticket.getPayload();
-    const userid = payload['sub'];
     const { name, email, picture } = payload;
     return {
         name, email, picture

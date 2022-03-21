@@ -3,7 +3,6 @@ import { UserModel } from '../models/user';
 import bcrypt from 'bcryptjs';
 import { generatedJWT } from '../helper/jwt';
 import { googleVerify } from '../helper/google-verify';
-import { User } from '../interfaces/user.interface';
 
 export const postAuth = async ( req: Request, res: Response ) => {
     
@@ -91,7 +90,18 @@ export const googleSignIn = async ( req: Request, res: Response ) => {
         });
     }
 
-      
+}
 
+export const renewToken = async ( req: Request, res: Response ) => {
+
+    const uid = req.params.uid;
+
+    const token = await generatedJWT( uid );
+
+    res.json({
+        ok: true,
+        newToken: token
+    }); 
 
 }
+
